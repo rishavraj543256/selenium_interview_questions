@@ -1,0 +1,461 @@
+𝗦𝗲𝗹𝗲𝗻𝗶𝘂𝗺 𝗪𝗲𝗯𝗗𝗿𝗶𝘃𝗲𝗿 𝗕𝗮𝘀𝗶𝗰 𝗤𝘂𝗲𝘀𝘁𝗶𝗼𝗻𝘀 
+✅1. What is Selenium?
+Selenium is an open-source automation testing framework primarily used for web application testing. It provides a suite of tools including:
+Selenium WebDriver: For browser automation
+Selenium IDE: For record and playback testing
+Selenium Grid: For parallel test execution across multiple machines
+Selenium RC (Remote Control): Legacy tool that's now deprecated
+
+✅2. Difference between Selenium 3 and Selenium 4?
+Key differences include:
+Selenium 4 uses W3C WebDriver protocol by default, while Selenium 3 used JSON Wire Protocol
+Selenium 4 has improved relative locators (above, below, near, toLeftOf, toRightOf)
+Selenium 4 has better support for Chrome DevTools Protocol
+Selenium 4 has improved documentation and better error messages
+Selenium 4 has native support for handling shadow DOM elements
+
+✅3. What are the different types of locators in Selenium?
+Different types of locators in Selenium:
+ID
+Name
+Class Name
+Tag Name
+Link Text
+Partial Link Text
+CSS Selector
+XPath
+Relative Locators (Selenium 4)
+
+✅4. Difference between `findElement()` and `findElements()`?
+findElement(): Returns a single WebElement (first matching element)
+findElements(): Returns a List<WebElement> (all matching elements)
+findElement() throws NoSuchElementException if no element is found
+findElements() returns an empty list if no elements are found
+
+✅5. How do you handle dropdowns in Selenium?
+Theory: Dropdowns can be handled in several ways:
+Select class: Best for standard HTML select elements
+Actions class: Useful for custom dropdowns
+JavaScript: For complex scenarios
+Keys: For keyboard navigation
+
+
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.action_chains import ActionChains
+
+# Using Select class
+select = Select(driver.find_element(By.ID, "dropdown"))
+select.select_by_visible_text("Option")
+select.select_by_value("value")
+select.select_by_index(0)
+
+# Using Actions
+actions = ActionChains(driver)
+actions.move_to_element(dropdown_element).click().perform()
+
+✅6. How to handle multiple windows in Selenium?
+Theory: Multiple windows handling involves:
+Getting window handles
+Switching between windows
+Managing window focus
+Closing specific windows
+# Get current window handle
+parent_window = driver.current_window_handle
+
+# Get all window handles
+handles = driver.window_handles
+
+# Switch to specific window
+for handle in handles:
+    if handle != parent_window:
+        driver.switch_to.window(handle)
+        break
+
+# Switch back to parent window
+driver.switch_to.window(parent_window)
+
+✅7. What is the difference between `get()` and `navigate().to()`?
+get(): Opens a URL in the current browser window/tab and waits for the page to load.
+navigate().to(): Navigates to a URL without waiting for the page to load.
+//...
+# Using get()
+driver.get("https://example.com")
+
+# Using navigate().to()
+driver.navigate().to("https://example.com")
+
+# Additional navigation methods
+driver.back()
+driver.forward()
+driver.refresh()
+
+✅8. How do you handle alerts and pop-ups?
+Theory: Alerts and pop-ups can be:
+JavaScript alerts
+Confirmation dialogs
+Prompt dialogs
+Modal dialogs
+Custom pop-ups
+# Handle JavaScript alert
+alert = driver.switch_to.alert
+alert.accept()  # Click OK
+alert.dismiss()  # Click Cancel
+alert_text = alert.text  # Get alert text
+
+# Handle custom pop-up
+popup = driver.find_element(By.ID, "popup")
+close_button = popup.find_element(By.CLASS_NAME, "close")
+close_button.click()
+
+
+✅9. How do you handle frames and iframes?
+Theory: Frames and iframes are different types of HTML elements:
+Frames: Part of the HTML frameset (deprecated)
+iframes: Inline frames, commonly used for embedded content
+Nested frames: Frames within frames
+Dynamic frames: Frames that load dynamically
+# Switch to frame by index
+driver.switch_to.frame(0)
+
+# Switch to frame by name or ID
+driver.switch_to.frame("frameName")
+
+# Switch to frame by WebElement
+frame_element = driver.find_element(By.ID, "frame_id")
+driver.switch_to.frame(frame_element)
+
+# Switch back to default content
+driver.switch_to.default_content()
+
+
+✅10. What is the difference between `driver.quit()` and
+`driver.close()`?
+Theory: These methods differ in their scope:
+quit(): Closes all browser windows and ends the WebDriver session
+close(): Closes only the current browser window
+quit() is preferred for test cleanup
+close() is useful for managing multiple windows
+# Close current window
+driver.close()
+
+# Close all windows and end session
+driver.quit()
+
+
+𝗦𝗲𝗹𝗲𝗻𝗶𝘂𝗺 𝗪𝗲𝗯𝗗𝗿𝗶𝘃𝗲𝗿 𝗔𝗱𝘃𝗮𝗻𝗰𝗲𝗱 𝗤𝘂𝗲𝘀𝘁𝗶𝗼𝗻𝘀 
+✅11. What are the different types of waits in Selenium?
+Three main types of waits:
+Implicit Wait: Global wait for all elements
+Explicit Wait: Specific wait for a particular element
+Fluent Wait: Advanced explicit wait with polling frequency
+
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# Implicit Wait
+driver.implicitly_wait(10)
+
+# Explicit Wait
+wait = WebDriverWait(driver, 10)
+element = wait.until(EC.presence_of_element_located((By.ID, "element_id")))
+
+# Fluent Wait
+from selenium.webdriver.support.ui import FluentWait
+wait = FluentWait(driver).with_timeout(30).polling_every(5).ignoring(NoSuchElementException)
+
+
+✅12. Implicit vs Explicit Wait - What's the difference?
+Key differences:
+Implicit Wait: Global, applies to all elements
+Explicit Wait: Specific, applies to particular elements
+Implicit Wait: Less flexible
+Explicit Wait: More precise and reliable
+
+
+# Implicit Wait (global)
+driver.implicitly_wait(10)
+
+# Explicit Wait (specific)
+wait = WebDriverWait(driver, 10)
+element = wait.until(EC.element_to_be_clickable((By.ID, "button_id")))
+
+
+✅13. What is Fluent Wait, and when do you use it?
+Fluent Wait is an advanced form of explicit wait that:
+Allows custom polling frequency
+Can ignore specific exceptions
+Provides more control over wait conditions
+Is useful for dynamic elements
+from selenium.webdriver.support.ui import FluentWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
+
+wait = FluentWait(driver).with_timeout(30).polling_every(5).ignoring(NoSuchElementException)
+element = wait.until(EC.presence_of_element_located((By.ID, "element_id")))
+
+
+✅14. How do you handle 'StaleElement ReferenceException'?
+This exception occurs when:
+DOM is updated
+Page is refreshed
+Element is re-rendered
+Element is removed and re-added
+Solutions:
+Re-fetch the element
+Use explicit waits
+Implement retry mechanism
+Use try-catch blocks
+
+from selenium.common.exceptions import StaleElementReferenceException
+
+def retry_find_element(driver, by, value, max_attempts=3):
+    for attempt in range(max_attempts):
+        try:
+            element = driver.find_element(by, value)
+            return element
+        except StaleElementReferenceException:
+            if attempt == max_attempts - 1:
+                raise
+            time.sleep(1)
+
+
+✅15. What is JavaScriptExecutor? How do you use it?
+Theory: JavaScriptExecutor allows:
+Executing JavaScript code
+Scrolling
+Clicking elements
+Getting page information
+Modifying page elements
+
+✅16. How do you scroll a webpage using Selenium?
+Theory: Different scrolling methods:
+JavaScript scrolling
+Action chains
+Keys
+Mouse wheel events
+
+
+# Using JavaScript
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+# Using Actions
+actions = ActionChains(driver)
+actions.move_to_element(element).perform()
+
+✅17. How do you take a screenshot in Selenium?
+Theory: Screenshot types:
+Full page
+Specific element
+Current viewport
+Multiple elements
+
+
+# Take screenshot of entire page
+driver.save_screenshot("screenshot.png")
+
+# Take screenshot of specific element
+element.screenshot("element_screenshot.png")
+
+
+✅18. How do you handle file uploads in Selenium?
+File upload methods:
+send_keys
+Robot class
+pyautogui
+JavaScript
+
+
+# Using send_keys
+element.send_keys("C:/path/to/file.txt")
+
+# Using pyautogui
+import pyautogui
+pyautogui.write('file_path')
+pyautogui.press('enter')
+
+
+✅19. How do you validate broken links in Selenium?
+Theory: Link validation involves:
+Getting all links
+Checking HTTP status codes
+Handling different types of links
+Reporting broken links
+
+import requests
+from urllib.parse import urlparse
+
+def check_broken_links(driver):
+    links = driver.find_elements(By.TAG_NAME, "a")
+    for link in links:
+        href = link.get_attribute("href")
+        if href:
+            response = requests.head(href)
+            if response.status_code >= 400:
+                print(f"Broken link: {href}")
+
+
+
+✅20. How do you capture network logs in Selenium?
+Theory: Network logging involves:
+Enabling performance logging
+Capturing network requests
+Analyzing network traffic
+Filtering specific requests
+
+from selenium.webdriver.chrome.options import Options
+
+chrome_options = Options()
+chrome_options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
+driver = webdriver.Chrome(options=chrome_options)
+
+
+
+𝗦𝗲𝗹𝗲𝗻𝗶𝘂𝗺 𝗙𝗿𝗮𝗺𝗲𝘄𝗼𝗿𝗸 𝗤𝘂𝗲𝘀𝘁𝗶𝗼𝗻𝘀 𝗳𝗼𝗿 𝗕𝗲𝘀𝘁 𝗣𝗿𝗮𝗰𝘁𝗶𝗰𝗲𝘀 
+✅21. What is the Page Object Model (POM)?
+Theory: POM is a design pattern that:
+Creates object repository
+Separates test logic from page logic
+Improves maintainability
+Reduces code duplication
+
+class LoginPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.username_field = (By.ID, "username")
+        self.password_field = (By.ID, "password")
+        self.login_button = (By.ID, "login")
+
+    def login(self, username, password):
+        self.driver.find_element(*self.username_field).send_keys(username)
+        self.driver.find_element(*self.password_field).send_keys(password)
+        self.driver.find_element(*self.login_button).click()
+
+
+✅22. What is Page Factory? How is it different from POM?
+Theory: Page Factory:
+Is an extension of POM
+Provides annotations
+Initializes elements
+Improves code readability
+
+from selenium.webdriver.support.pagefactory import PageFactory
+
+class BasePage:
+    def __init__(self, driver):
+        self.driver = driver
+        PageFactory.init_elements(self, driver)
+
+
+✅23. What is the difference between `@FindBy' and
+driver.findElement()`?
+
+Theory: Key differences:
+@FindBy: Lazy initialization
+find_element(): Immediate initialization
+@FindBy: Better performance
+find_element(): More flexible
+
+# Using find_element
+element = driver.find_element(By.ID, "element_id")
+
+# Using Page Factory (in Python with custom implementation)
+class Page:
+    def __init__(self, driver):
+        self.driver = driver
+        self.element = (By.ID, "element_id")
+
+
+
+✅24. What are Selenium Grid and its advantages?
+Theory: Selenium Grid provides:
+Parallel test execution
+Cross-browser testing
+Cross-platform testing
+Load balancing
+Centralized test execution
+
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+# Connect to Grid
+driver = webdriver.Remote(
+    command_executor='http://localhost:4444/wd/hub',
+    desired_capabilities=DesiredCapabilities.CHROME
+)
+
+
+✅25. How do you handle dynamic elements in Selenium?
+
+Theory: Dynamic elements can be handled by:
+Explicit waits
+Dynamic XPath
+JavaScript
+Retry mechanisms
+
+# Using explicit wait
+wait = WebDriverWait(driver, 10)
+element = wait.until(EC.presence_of_element_located((By.XPATH, "//div[contains(@class, 'dynamic')]")))
+
+# Using dynamic XPath
+element = driver.find_element(By.XPATH, "//div[contains(@class, 'dynamic')]")
+
+
+
+✅26. What is the role of `Desired capabilities in Selenium?
+Theory: Desired Capabilities:
+Set browser properties
+Configure test environment
+Set platform-specific settings
+Configure proxy settings
+
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+capabilities = DesiredCapabilities.CHROME
+capabilities['platform'] = "WINDOWS"
+capabilities['version'] = "latest"
+driver = webdriver.Chrome(desired_capabilities=capabilities)
+
+
+
+✅27. What are the different types of Assertions used in
+Selenium?
+
+Theory: Different assertion types:
+Hard assertions
+Soft assertions
+Custom assertions
+Built-in assertions
+
+# Using unittest
+import unittest
+
+class Test(unittest.TestCase):
+    def test_example(self):
+        self.assertEqual(expected, actual)
+        self.assertTrue(condition)
+        self.assertIn(item, list)
+
+
+
+✅28. What are the limitations of Selenium WebDriver?
+
+Theory: Key limitations:
+Cannot handle desktop applications
+No built-in reporting
+No image comparison
+Limited mobile testing
+Performance testing limitations
+
+
+
+
+✅29. How do you integrate Selenium with TestNG 
+✅30. What are TestNG Listeners, and how do you implement them?
+
+𝗦𝗲𝗹𝗲𝗻𝗶𝘂𝗺 𝗘𝘅𝗲𝗰𝘂𝘁𝗶𝗼𝗻 & 𝗗𝗲𝗯𝘂𝗴𝗴𝗶𝗻𝗴 𝗾𝘂𝗲𝘀𝘁𝗶𝗼𝗻𝘀 
+✅31. How do you run Selenium tests in headless mode?
+✅32. How do you handle authentication pop-ups in Selenium?
+✅33. How to execute parallel tests in Selenium?
+✅34. How do you handle CAPTCHA in Selenium?
+✅35. What are the different ways to maximize a browser
+window in Selenium?TestNG?
