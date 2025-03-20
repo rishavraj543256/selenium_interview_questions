@@ -454,8 +454,74 @@ Performance testing limitations
 
 𝗦𝗲𝗹𝗲𝗻𝗶𝘂𝗺 𝗘𝘅𝗲𝗰𝘂𝘁𝗶𝗼𝗻 & 𝗗𝗲𝗯𝘂𝗴𝗴𝗶𝗻𝗴 𝗾𝘂𝗲𝘀𝘁𝗶𝗼𝗻𝘀 
 ✅31. How do you run Selenium tests in headless mode?
+
+
+To run Selenium tests in headless mode, you need to configure the WebDriver to use a headless browser. This means the browser will run without a graphical user interface (GUI), which is particularly useful for automated testing in environments where you don't need to see the browser window, such as CI/CD pipelines.
+
+Key Points:
+Headless mode helps speed up tests by not opening a visible browser window.
+You can use Chrome or Firefox as headless browsers in Selenium.
+The --headless flag for Chrome or setting headless = True for Firefox is necessary to run the tests in headless mode.
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+# Set up Chrome options
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Enables headless mode
+chrome_options.add_argument("--disable-gpu")  # Optional, disables GPU hardware acceleration
+chrome_options.add_argument("--window-size=1920x1080")  # Optional, set the window size for headless mode
+
+# Create a new instance of the Chrome WebDriver with the headless options
+driver = webdriver.Chrome(options=chrome_options)
+
+# Perform your test actions
+driver.get("https://www.example.com")
+print(driver.title)
+
+# Close the browser after test completion
+driver.quit()
+
+
+
+
 ✅32. How do you handle authentication pop-ups in Selenium?
+
+To handle authentication pop-ups in Selenium, the approach you take depends on the type of authentication prompt you're dealing with.
+
+For basic authentication (HTTP authentication pop-ups), one simple way is to include the username and password directly in the URL. You can format the URL like this:
+http://username:password@yourwebsite.com. This way, Selenium will automatically pass the credentials when accessing the page, and the authentication pop-up won't appear.
+
+For handling custom login pop-ups (HTML-based), you can interact with the fields on the pop-up just like any other form element in Selenium. Use WebDriverWait to wait for the elements (username and password fields) to be visible and then fill them in and submit the form. This is useful for custom login forms embedded within the webpage.
+
+For handling authentication pop-ups in Chrome, you can use ChromeOptions to set up the browser with the necessary credentials. This may involve passing the credentials via the URL or setting specific flags in the Chrome options to suppress the pop-up. However, sometimes this may not work for all types of authentication dialogs.
+
+In Firefox, you can configure a custom Firefox profile with the necessary credentials to avoid seeing the authentication pop-up. This is similar to the method used in Chrome but specific to Firefox’s profile settings.
+
+For OS-level authentication dialogs (such as Windows authentication pop-ups), an external tool like AutoIT might be necessary. This tool can simulate keyboard inputs to fill in the username and password, allowing Selenium to continue with the test once the credentials are provided.
+
+
+
 ✅33. How to execute parallel tests in Selenium?
+
+There are several ways to execute parallel tests in Selenium, depending on your needs and infrastructure:
+
+For simple use cases, you can use Python's unittest with ThreadPoolExecutor or pytest with the pytest-xdist plugin.
+For more complex setups, you can use Selenium Grid or cloud services like Sauce Labs and BrowserStack to run tests across multiple browsers or machines.
+TestNG in Java is another great choice for parallel execution in a more structured manner.
+By using parallel execution, you can significantly reduce your testing time and improve the efficiency of your test automation strategy.
+
+
 ✅34. How do you handle CAPTCHA in Selenium?
+
+Handling CAPTCHA in Selenium can be difficult since CAPTCHAs are designed to block automated access. The most ethical and effective approaches are:
+
+Disabling CAPTCHA in your test or development environments.
+Using third-party CAPTCHA solving services like 2Captcha or AntiCaptcha.
+Using OCR to solve text-based CAPTCHAs (though this has limited success with modern CAPTCHAs).
+
+
+
+
 ✅35. What are the different ways to maximize a browser
 window in Selenium?TestNG?
